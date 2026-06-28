@@ -26,7 +26,8 @@ nvol = 5000
 xA = 1.2
 
 # Derived parameters
-config = 2   # 1 for case 1, 2 for case 2
+config = 1   # 1 for case 1, 2 for case 2
+make_animation = 0 # 1 to generate the animated GIF, 0 to not generate it
 
 if config == 1:
     L = 2
@@ -125,8 +126,6 @@ while t < tfinal:
     if abs(t - t3) < 1e-9: u3[:] = u
     if abs(t - t4) < 1e-9: u4[:] = u
 
-t_end = time()
-
 
 #########################################################################################################################
 #########################################################################################################################
@@ -161,34 +160,39 @@ plt.title(f"Burgers — Case {config}: u({xA}) over time")
 plt.grid(True)
 plt.show()
 
-# u(x) for the study domain over time
-fig, ax = plt.subplots()
-line, = ax.plot([], [], lw=1.5)
-ax.set_xlim(-L, L)
-ax.set_ylim((0.9 if config == 2 else -0.1), (2.1 if config == 2 else 1.1))
-ax.set_xlabel("x")
-ax.set_ylabel("u")
-ax.grid(True)
-title = ax.set_title("")
+if make_animation == 1:
+    # u(x) for the study domain over time
+    fig, ax = plt.subplots()
+    line, = ax.plot([], [], lw=1.5)
+    ax.set_xlim(-L, L)
+    ax.set_ylim((0.9 if config == 2 else -0.1), (2.1 if config == 2 else 1.1))
+    ax.set_xlabel("x")
+    ax.set_ylabel("u")
+    ax.grid(True)
+    title = ax.set_title("")
 
-def init():
-    line.set_data([], [])
-    return line, title
 
-def animate(frame):
-    t_f, u_f = frame
-    line.set_data(xp, u_f)
-    title.set_text(f"Burgers — Case {config}:  t = {t_f:.3f}")
-    return line, title
+    def init():
+        line.set_data([], [])
+        return line, title
 
-anim = animation.FuncAnimation(fig, animate, frames=snap,
-                               init_func=init, interval=40, blit=False)
-anim.save(f"burgers_case{config}.gif", writer="pillow", fps=25)
-print("animation saved")
+
+    def animate(frame):
+        t_f, u_f = frame
+        line.set_data(xp, u_f)
+        title.set_text(f"Burgers — Case {config}:  t = {t_f:.3f}")
+        return line, title
+
+
+    anim = animation.FuncAnimation(fig, animate, frames=snap,
+                                   init_func=init, interval=40, blit=False)
+    anim.save(f"burgers_case{config}.gif", writer="pillow", fps=25)
+    print("animation saved")
 
 
 #########################################################################################################################
 #########################################################################################################################
+t_end = time()
 tCPU = t_end - t0
 print('CPU time = {:1.2f} sec for {:1.0f} volumes'.format(tCPU, nvol))
 
