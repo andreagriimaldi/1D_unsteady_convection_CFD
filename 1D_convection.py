@@ -28,7 +28,7 @@ step_max = 20000
 
 # Configuration parameters
 config = 1   # 1 for case 1, 2 for case 2
-make_animation = 0 # 1 to generate the animated GIF, 0 to not generate it
+make_animation = 1 # 1 to generate the animated GIF, 0 to not generate it
 
 # Derived parameters
 if config == 1:
@@ -36,12 +36,15 @@ if config == 1:
     dx = (2 * L)/nvol
     uL = 0
     uR = 0
+    u_min = 0
+    u_maxx = 1
 else:
     L = 3
     dx = (2 * L)/nvol
     uL = 1
     uR = 1
-
+    u_min = 1
+    u_maxx = 2
 assert abs(xA) <= L, "xA should be in the study domain"
 
 xp = np.linspace(-L + dx/2, L - dx/2, nvol)
@@ -134,7 +137,7 @@ while t < tfinal and step < step_max:
 #########################################################################################################################
 # u(x) over time
 plt.figure()
-plt.plot(xp, u0[1:-1], '--', color='black', label="t = 0 (initial)")
+plt.plot(xp, u0[1:-1], '--', color='black', lw=0.9, label="t = 0 (initial)")
 plt.plot(xp, u1[1:-1], label=f"t = {t1}")
 plt.plot(xp, u2[1:-1], label=f"t = {t2}")
 plt.plot(xp, u3[1:-1], label=f"t = {t3}")
@@ -169,7 +172,7 @@ if make_animation == 1:
     fig, ax = plt.subplots()
     line, = ax.plot([], [], lw=1.5)
     ax.set_xlim(-L, L)
-    ax.set_ylim((0.9 if config == 2 else -0.1), (2.1 if config == 2 else 1.1))
+    ax.set_ylim((u_min - 0.1), (u_maxx + 0.1))
     ax.set_xlabel("x")
     ax.set_ylabel("u")
     ax.grid(True)
