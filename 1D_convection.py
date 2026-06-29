@@ -24,11 +24,13 @@ t4 = 2.0
 tfinal = 3.4
 nvol = 5000
 xA = 1.2
+step_max = 20000
 
-# Derived parameters
+# Configuration parameters
 config = 1   # 1 for case 1, 2 for case 2
 make_animation = 0 # 1 to generate the animated GIF, 0 to not generate it
 
+# Derived parameters
 if config == 1:
     L = 2
     dx = (2 * L)/nvol
@@ -61,6 +63,7 @@ else:
             u[i] = 1
 
 # Allocating space for final data presentation
+u0 = u.copy()
 u1 = np.zeros(nvol + 2)
 u2 = np.zeros(nvol + 2)
 u3 = np.zeros(nvol + 2)
@@ -99,7 +102,7 @@ def timeToNextTarget(t):
 t = 0.0
 step = 0
 
-while t < tfinal:
+while t < tfinal and step < step_max:
     dt = getTimeStep(np.max(np.abs(u[1:-1])))
     dt = min(dt, timeToNextTarget(t))
     times.append(t)
@@ -112,7 +115,7 @@ while t < tfinal:
     Fe = np.where(ue > 0, F[1:-1], F[2:])
     Fw = np.where(uw > 0, F[:-2], F[1:-1])
 
-    u[1:-1] = u[1:-1] - dt / dx * (Fe - Fw)
+    u[1:-1] = u[1:-1] - (dt/dx) * (Fe - Fw)
 
     t += dt
 
@@ -131,13 +134,14 @@ while t < tfinal:
 #########################################################################################################################
 # u(x) over time
 plt.figure()
+plt.plot(xp, u0[1:-1], '--', color='black', label="t = 0 (initial)")
 plt.plot(xp, u1[1:-1], label=f"t = {t1}")
 plt.plot(xp, u2[1:-1], label=f"t = {t2}")
 plt.plot(xp, u3[1:-1], label=f"t = {t3}")
 plt.plot(xp, u4[1:-1], label=f"t = {t4}")
 plt.xlabel("x")
-plt.ylabel("u")
-plt.title(f"Burgers — Case {config}: u(x) at selected times")
+plt.ylabel("u(x)")
+plt.title(f"Configuration {config}: u(x) at selected times")
 plt.legend()
 plt.grid(True)
 plt.show()
@@ -147,7 +151,7 @@ plt.figure()
 plt.plot(times, u_max)
 plt.xlabel("t")
 plt.ylabel("max u")
-plt.title(f"Burgers — Case {config}: maximum of u over time")
+plt.title(f"Configuration {config}: maximum of u over time")
 plt.grid(True)
 plt.show()
 
@@ -156,7 +160,7 @@ plt.figure()
 plt.plot(times, u_a)
 plt.xlabel("t")
 plt.ylabel("u(xA)")
-plt.title(f"Burgers — Case {config}: u({xA}) over time")
+plt.title(f"Configuration {config}: u({xA}) over time")
 plt.grid(True)
 plt.show()
 
@@ -180,14 +184,14 @@ if make_animation == 1:
     def animate(frame):
         t_f, u_f = frame
         line.set_data(xp, u_f)
-        title.set_text(f"Burgers — Case {config}:  t = {t_f:.3f}")
+        title.set_text(f"Configuration {config}:  t = {t_f:.3f}")
         return line, title
 
 
     anim = animation.FuncAnimation(fig, animate, frames=snap,
                                    init_func=init, interval=40, blit=False)
     anim.save(f"burgers_case{config}.gif", writer="pillow", fps=25)
-    print("animation saved")
+    print("Animation saved")
 
 
 #########################################################################################################################
@@ -195,6 +199,6 @@ if make_animation == 1:
 t_end = time()
 tCPU = t_end - t0
 print('CPU time = {:1.2f} sec for {:1.0f} volumes'.format(tCPU, nvol))
-
+print('Number of steps: {:1.0f}'.format(step))
 
 
