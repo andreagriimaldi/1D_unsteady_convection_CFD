@@ -112,11 +112,10 @@ while t < tfinal and step < step_max:
     u_max.append(np.max(u[1:-1]))
     u_a.append(u[iA])
 
-    ue = (u[1:-1] + u[2:])/2
-    uw = (u[:-2] + u[1:-1])/2
+    v = u[1:-1] # vector of velocities used to check the convection direction
     F = (u ** 2)/2
-    Fe = np.where(ue > 0, F[1:-1], F[2:])
-    Fw = np.where(uw > 0, F[:-2], F[1:-1])
+    Fe = np.where(v > 0, F[1:-1], F[2:])
+    Fw = np.where(v > 0, F[:-2], F[1:-1])
 
     u[1:-1] = u[1:-1] - (dt/dx) * (Fe - Fw)
 
