@@ -28,9 +28,9 @@ step_max = 20000
 
 # Configuration parameters
 config = 1   # 1 for case 1, 2 for case 2
-make_animation = 1 # 1 to generate the animated GIF, 0 to not generate it
+make_animation = 0 # 1 to generate the animated GIF, 0 to not generate it
 
-# Derived parameters
+# Given parameters
 if config == 1:
     L = 2
     dx = (2 * L)/nvol
@@ -83,7 +83,7 @@ snap_freq = 20
 #########################################################################################################################
 # Helper functions
 def getTimeStep(uMax):
-    C = 0.8
+    C = 1
     assert C <= 1, "CFL must be less or equal than 1"
     return (C * dx)/max(uMax, 1e-12)
 
