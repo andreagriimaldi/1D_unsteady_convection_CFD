@@ -27,7 +27,7 @@ xA = 1.2
 step_max = 20000
 
 # Configuration parameters
-config = 1   # 1 for case 1, 2 for case 2
+config = 1         # 1 for case 1, 2 for case 2
 make_animation = 0 # 1 to generate the animated GIF, 0 to not generate it
 
 # Given parameters
