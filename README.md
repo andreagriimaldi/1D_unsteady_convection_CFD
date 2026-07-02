@@ -44,13 +44,13 @@ and clipped so the march lands exactly on the requested output times. `C = 1` si
 
 **Configuration 1 — Gaussian profile.** The forward face steepens into a shock while the rear face opens into a rarefaction; the peak is convected downstream and decays after the shock forms.
 
-![Configuration 1: u(x) at selected times](case1.png)
+![Configuration 1: u(x) at selected times](images/case1.png)
 
 **Configuration 2 — Square wave.** The leading edge propagates as a shock at the Rankine–Hugoniot speed `s = 3/2`; the trailing edge spreads into a rarefaction fan that erodes the plateau after the interaction time `t = 1.8`.
 
-![Configuration 2: u(x) at selected times](case2.png)
+![Configuration 2: u(x) at selected times](images/case2.png)
 
-Full analysis — characteristic and Riemann verification, numerical-diffusion study, mesh independence, and first-order shock-position convergence — is in [`Grimaldi_final_report.pdf`](Grimaldi_final_report.pdf).
+Full analysis — characteristic and Riemann verification, numerical-diffusion study, mesh independence, and first-order shock-position convergence — is in [`Report.pdf`](Grimaldi_final_report.pdf).
 
 ## Repository contents
 
